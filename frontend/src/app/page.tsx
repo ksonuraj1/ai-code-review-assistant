@@ -1,9 +1,5 @@
-import Layout from "../components/Layout/Layout";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <Layout>
-      <h1>Dashboard</h1>
-    </Layout>
-  );
+  redirect("/dashboard");
 }

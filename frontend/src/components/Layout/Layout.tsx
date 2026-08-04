@@ -13,7 +13,7 @@ export default function Layout({ children }: LayoutProps) {
       <div>
         <Sidebar />
 
-        <main>{children}</main>
+        <main className="flex-1 p-8">{children}</main>
       </div>
     </>
   );
