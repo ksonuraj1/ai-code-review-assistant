@@ -1,9 +1,9 @@
+import Layout from "../components/Layout/Layout";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <h1 className="text-5xl font-bold text-blue-600">
-        AI Code Review Assistant
-      </h1>
-    </main>
+    <Layout>
+      <h1>Dashboard</h1>
+    </Layout>
   );
 }
