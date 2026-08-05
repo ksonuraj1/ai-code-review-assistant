@@ -4,7 +4,7 @@ interface CardProps {
 
 export default function Card({ children }: CardProps) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
+    <div className="rounded-lg border border-gray-200 bg-white px-4 py-4 shadow-sm">
       {children}
     </div>
   );

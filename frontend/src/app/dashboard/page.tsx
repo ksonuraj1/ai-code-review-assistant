@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function DashboardPage() {
   return (
     <AppLayout>
-      <div className="px-4 py-6 sm:px-6 lg:px-8">
+      <div className=" flex flex-col sm:px-8 lg:px-12 gap-1">
         {/* Page Heading */}
         <div>
           <h1 className="text-3xl font-bold">Dashboard</h1>
@@ -16,13 +16,15 @@ export default function DashboardPage() {
         </div>
 
         {/* Statistics */}
-        <DashboardStats />
+        <div className="mt-10">
+          <DashboardStats />
+        </div>
 
         {/* Primary Action */}
         <div>
           <Link
             href="/review"
-            className="inline-flex items-center rounded-md bg-blue-600 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="inline-flex items-center rounded-md bg-blue-600 px-3 py-4  text-sm font-medium text-white transition-colors hover:bg-blue-700"
           >
             Start New Review
           </Link>

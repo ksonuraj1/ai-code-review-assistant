@@ -5,13 +5,20 @@ interface AIReviewProps {
 }
 
 export default function AIReview({ review }: AIReviewProps) {
-  if (!review) return null;
+  if (!review) {
+    return (
+      <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-10 text-center shadow-sm shadow-slate-200/10">
+        <p className="text-base font-medium text-slate-500">
+          Submit your code to see the AI review rendered in a clean, readable
+          format.
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col rounded-lg border bg-white p-6 shadow-sm">
-      <h2 className="mb-6 text-2xl font-semibold">AI Review</h2>
-
-      <article className="prose prose-slate max-w-none">
+    <div className="rounded-[1.75rem] border border-slate-200 bg-white p-8 shadow-sm shadow-slate-200/10">
+      <article className="prose prose-slate max-w-none text-slate-700">
         <ReactMarkdown>{review}</ReactMarkdown>
       </article>
     </div>
