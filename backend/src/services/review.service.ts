@@ -3,6 +3,7 @@ import groq from "../providers/groq.provider";
 interface ReviewRequest {
   language: string;
   code: string;
+  filename?: string;
 }
 
 interface ReviewResponse {
@@ -12,11 +13,12 @@ interface ReviewResponse {
 export const reviewCodeService = async ({
   language,
   code,
+  filename,
 }: ReviewRequest): Promise<ReviewResponse> => {
   const prompt = `
 You are a Senior Staff Software Engineer.
 
-Review the following ${language} code.
+Review the following ${language} code${filename ? ` from the file ${filename}` : ""}.
 
 Evaluate:
 

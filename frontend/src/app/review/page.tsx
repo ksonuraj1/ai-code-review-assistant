@@ -5,8 +5,30 @@ import CodeEditor from "@/src/components/Editor/CodeEditor";
 import AIReview from "@/src/components/Review/AIReview";
 import AppLayout from "@/src/layouts/AppLayout";
 import { reviewCode } from "@/src/services/review.services";
+import { addReviewHistory } from "@/src/utils/reviewHistory";
 import { incrementReviewStats } from "@/src/utils/reviewStats";
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
+
+type FileLanguageMap = Record<string, string>;
+
+const fileLanguageMap: FileLanguageMap = {
+  js: "JavaScript",
+  ts: "TypeScript",
+  py: "Python",
+  java: "Java",
+  cs: "C#",
+  go: "Go",
+  rb: "Ruby",
+  php: "PHP",
+  swift: "Swift",
+  kt: "Kotlin",
+  kts: "Kotlin",
+};
+
+function getLanguageFromFilename(filename: string) {
+  const ext = filename.split(".").pop()?.toLowerCase() || "";
+  return fileLanguageMap[ext] || "JavaScript";
+}
 
 const languageOptions = [
   "JavaScript",
@@ -27,6 +49,7 @@ export default function ReviewPage() {
   const [review, setReview] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [filename, setFilename] = useState("");
 
   const handleReview = async () => {
     if (!code.trim()) {
@@ -41,17 +64,49 @@ export default function ReviewPage() {
       const response = await reviewCode({
         language,
         code,
+        filename: filename || undefined,
       });
 
-      setReview(response.data.review);
+      const reviewText = response.data.review;
+      setReview(reviewText);
+
       const filesReviewed = code.split(/\r?\n/).filter(Boolean).length;
-      const stats = incrementReviewStats(filesReviewed);
-      // setDashboardStats(stats);
+      incrementReviewStats(filesReviewed);
+      addReviewHistory({
+        id: crypto.randomUUID(),
+        timestamp: new Date().toLocaleString(),
+        filename: filename || "Pasted code",
+        language,
+        lines: filesReviewed,
+        review: reviewText,
+      });
     } catch (err) {
       setError("Failed to generate AI review.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadFile = async (file: File) => {
+    setFilename(file.name);
+    setLanguage(getLanguageFromFilename(file.name));
+
+    try {
+      const text = await file.text();
+      setCode(text);
+      setError("");
+    } catch (err) {
+      setError("Unable to read uploaded file.");
+    }
+  };
+
+  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    await loadFile(file);
   };
 
   return (
@@ -66,10 +121,22 @@ export default function ReviewPage() {
                     Code Editor
                   </p>
                   <h2 className="mt-2 text-2xl font-semibold text-slate-900">
-                    Paste your code here
+                    Upload a file or paste code to review
                   </h2>
                 </div>
                 <div className="mt-2 flex flex-col gap-3 sm:mt-0 sm:flex-row sm:items-center">
+                  <label className="flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50">
+                    <span>Upload</span>
+                    <input
+                      type="file"
+                      accept=".js,.ts,.py,.java,.cs,.go,.rb,.php,.swift,.kt,.kts"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
+                  </label>
+                  <span className="text-sm text-slate-500">
+                    {filename || "No file loaded"}
+                  </span>
                   <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-white px-2 py-1 shadow-sm">
                     <label
                       htmlFor="language"
@@ -90,7 +157,10 @@ export default function ReviewPage() {
                       ))}
                     </select>
                   </div>
-                  <Button onClick={handleReview} disabled={loading}>
+                  <Button
+                    onClick={handleReview}
+                    disabled={loading || !code.trim()}
+                  >
                     {loading ? "Reviewing..." : "Review Code"}
                   </Button>
                 </div>

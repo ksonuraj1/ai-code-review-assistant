@@ -7,11 +7,12 @@ export const reviewCode = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const { language, code } = req.body;
+    const { language, code, filename } = req.body;
 
     const review = await reviewCodeService({
       language,
       code,
+      filename,
     });
 
     res.status(200).json({
