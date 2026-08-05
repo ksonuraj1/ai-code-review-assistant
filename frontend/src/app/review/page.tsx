@@ -5,6 +5,7 @@ import CodeEditor from "@/src/components/Editor/CodeEditor";
 import AIReview from "@/src/components/Review/AIReview";
 import AppLayout from "@/src/layouts/AppLayout";
 import { reviewCode } from "@/src/services/review.services";
+import { incrementReviewStats } from "@/src/utils/reviewStats";
 import { useState } from "react";
 
 const languageOptions = [
@@ -43,6 +44,9 @@ export default function ReviewPage() {
       });
 
       setReview(response.data.review);
+      const filesReviewed = code.split(/\r?\n/).filter(Boolean).length;
+      const stats = incrementReviewStats(filesReviewed);
+      // setDashboardStats(stats);
     } catch (err) {
       setError("Failed to generate AI review.");
     } finally {
@@ -119,45 +123,6 @@ export default function ReviewPage() {
               <AIReview review={review} />
             </section>
           </div>
-
-          {/* <aside className="space-y-6">
-            <div className="sticky top-24 space-y-6">
-              <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/10">
-                <h3 className="text-lg font-semibold text-slate-900">
-                  How it works
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-slate-600">
-                  The assistant scans your code and highlights style issues,
-                  logic problems, and readability improvements.
-                </p>
-                <ul className="mt-5 space-y-3 text-sm text-slate-600">
-                  <li className="flex gap-3">
-                    <span className="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-slate-900" />
-                    Style and convention suggestions
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-slate-900" />
-                    Cleaner structure and simplified logic
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-slate-900" />
-                    Advice for maintainable code
-                  </li>
-                </ul>
-              </div>
-
-              <div className="rounded-[1.75rem] border border-slate-200 bg-slate-950 p-6 text-white shadow-sm shadow-slate-900/10">
-                <p className="text-sm font-semibold uppercase tracking-[0.28em] text-slate-400">
-                  Pro tip
-                </p>
-                <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-200">
-                  <li>Review one function or component at a time.</li>
-                  <li>Give AI extra context for better suggestions.</li>
-                  <li>Use this before final code checks.</li>
-                </ul>
-              </div>
-            </div>
-          </aside> */}
         </div>
       </div>
     </AppLayout>
