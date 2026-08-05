@@ -28,7 +28,8 @@ export default function CodeEditor({
 
       {/* Monaco Editor */}
       <Editor
-        height="500px"
+        height="350px"
+        width="90%"
         language={language.toLowerCase()}
         value={code}
         onChange={(value) => onChange(value || "")}

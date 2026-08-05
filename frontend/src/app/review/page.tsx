@@ -2,23 +2,39 @@
 
 import Button from "@/src/components/Button/Button";
 import CodeEditor from "@/src/components/Editor/CodeEditor";
+import AIReview from "@/src/components/Review/AIReview";
 import AppLayout from "@/src/layouts/AppLayout";
+import { reviewCode } from "@/src/services/review.services";
 import { useState } from "react";
 
 export default function ReviewPage() {
   const [language] = useState("JavaScript");
   const [code, setCode] = useState("");
+  const [review, setReview] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleReview = () => {
+  const handleReview = async () => {
     if (!code.trim()) {
-      alert("Please enter some code to review.");
+      alert("Please enter some code");
       return;
     }
 
-    console.log({
-      language,
-      code,
-    });
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await reviewCode({
+        language,
+        code,
+      });
+
+      setReview(response.data.review);
+    } catch (err) {
+      setError("Failed to generate AI review.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,9 +50,18 @@ export default function ReviewPage() {
         </div>
 
         {/* Editor */}
-        <CodeEditor code={code} language={language} onChange={setCode} />
-        <div className="flex justify-end">
-          <Button onClick={handleReview}>Review Code</Button>
+
+        <div>
+          <CodeEditor code={code} language={language} onChange={setCode} />
+        </div>
+        <div className="flex flex-col justify-end w-0 flex-1 space-y-4">
+          <Button onClick={handleReview} disabled={loading}>
+            {loading ? "Reviewing..." : "Review Code"}
+          </Button>
+
+          {error && <p className="text-red-600">{error}</p>}
+
+          <AIReview review={review} />
         </div>
       </div>
     </AppLayout>
