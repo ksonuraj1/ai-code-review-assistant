@@ -77,8 +77,7 @@ ai-code-review-assistant/
 ### Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/ai-code-review-assistant.git
-
+git clone repo
 cd ai-code-review-assistant
 ```
 
