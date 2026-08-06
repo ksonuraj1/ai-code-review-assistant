@@ -32,8 +32,10 @@ export default function CodeEditor({
     <div className="space-y-6">
       <div className="overflow-hidden rounded-b-2xl">
         <Editor
-          height="300px"
+          height="400px"
           width="100%"
+          defaultLanguage={editorLanguage}
+          defaultValue={code}
           language={editorLanguage}
           value={code}
           onChange={(value) => onChange(value || "")}
