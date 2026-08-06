@@ -12,7 +12,6 @@ export const reviewCode = async (
     const review = await reviewCodeService({
       language,
       code,
-      filename,
     });
 
     res.status(200).json({

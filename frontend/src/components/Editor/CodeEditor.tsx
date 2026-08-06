@@ -30,43 +30,31 @@ export default function CodeEditor({
 
   return (
     <div className="space-y-6">
-      <div className="gap-4 sm:grid-cols-[1fr_auto] sm:items-center">
-        <div>
-          {/* <label className="mb-2 block text-sm font-medium text-slate-700">
-            Language
-          </label>
-          <p className="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">
-            {language}
-          </p> */}
-        </div>
-      </div>
-
-      <div className="overflow-hidden rounded-[1.25rem] border border-slate-200 bg-slate-50 shadow-sm">
+      <div className="overflow-hidden rounded-b-2xl">
         <Editor
           height="300px"
           width="100%"
           language={editorLanguage}
           value={code}
           onChange={(value) => onChange(value || "")}
-          theme="vs-light"
+          theme="vs-dark"
           options={{
             minimap: {
               enabled: false,
             },
             fontSize: 15,
+            fontLigatures: true,
             automaticLayout: true,
             scrollBeyondLastLine: false,
-            quickSuggestions: {
-              other: true,
-              comments: false,
-              strings: true,
+            wordWrap: "on",
+            tabSize: 2,
+            padding: {
+              top: 20,
             },
-            suggestOnTriggerCharacters: true,
-            parameterHints: {
-              enabled: true,
-            },
-            tabCompletion: "on",
-            suggestSelection: "first",
+            roundedSelection: true,
+            smoothScrolling: true,
+            cursorBlinking: "smooth",
+            renderLineHighlight: "all",
           }}
         />
       </div>

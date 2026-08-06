@@ -13,12 +13,10 @@ interface ReviewResponse {
 export const reviewCodeService = async ({
   language,
   code,
-  filename,
 }: ReviewRequest): Promise<ReviewResponse> => {
   const prompt = `
 You are a Senior Staff Software Engineer.
-
-Review the following ${language} code${filename ? ` from the file ${filename}` : ""}.
+Review the following ${language} and code${code}.
 
 Evaluate:
 

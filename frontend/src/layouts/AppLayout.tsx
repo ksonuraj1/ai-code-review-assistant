@@ -1,19 +1,21 @@
-import Navbar from "../components/Navbar/Navbar";
-import Sidebar from "../components/Sidebar/Sidebar";
+import { ReactNode } from "react";
+
+import Navbar from "@/src/components/Navbar/Navbar";
+import Sidebar from "@/src/components/Sidebar/Sidebar";
 
 interface AppLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
   return (
-    <div className="h-full bg-slate-50 text-slate-900 flex flex-col">
+    <div className="min-h-screen bg-slate-950 text-slate-100">
       <Navbar />
-      <div className="flex flex-1 min-h-0 overflow-hidden">
+
+      <div className="flex">
         <Sidebar />
-        <main className="flex-1 min-h-0 overflow-auto py-2 sm:px-6 lg:px-10">
-          {children}
-        </main>
+
+        <main className="flex-1 p-10 overflow-auto">{children}</main>
       </div>
     </div>
   );

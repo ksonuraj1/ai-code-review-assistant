@@ -9,7 +9,7 @@ interface ReviewRequest {
 export const reviewCode = async ({
   language,
   code,
-  filename,
+  filename = "test.jsx",
 }: ReviewRequest) => {
   const response = await api.post("/review", {
     language,

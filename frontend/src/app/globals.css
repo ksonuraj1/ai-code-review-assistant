@@ -1,64 +1,51 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: light;
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-  font-feature-settings: "ss01" on;
-  line-height: 1.5;
-  text-rendering: optimizeLegibility;
+  /* Backgrounds */
+  --background: #0f172a;
+  --surface: #111827;
+  --card: #1e293b;
+
+  /* Borders */
+  --border: #334155;
+
+  /* Brand */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+
+  /* Text */
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+
+  /* Status */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
 }
 
-* {
-  margin: 0;
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
+html,
+body {
+  background: var(--background);
+  color: var(--text);
+
+  margin: 0;
+  padding: 0;
+
+  min-height: 100%;
+  font-family: Inter, sans-serif;
 }
 
 body {
-  min-height: 100%;
-  background:
-    radial-gradient(circle at top, rgba(148, 163, 184, 0.12), transparent 30%),
-    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
-  color: #0f172a;
+  min-height: 100vh;
 }
 
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
-
-::selection {
-  background: rgba(59, 130, 246, 0.2);
-  color: #0f172a;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    radial-gradient(
-      circle at 12% 10%,
-      rgba(59, 130, 246, 0.14),
-      transparent 15%
-    ),
-    radial-gradient(circle at 86% 18%, rgba(168, 85, 247, 0.1), transparent 12%);
-}
-
-#__next {
-  position: relative;
-  z-index: 0;
+a {
+  text-decoration: none;
+  color: inherit;
 }

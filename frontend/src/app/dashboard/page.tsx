@@ -1,6 +1,7 @@
 import DashboardStats from "@/src/components/Dashboard/DashboardStats";
 import AppLayout from "@/src/layouts/AppLayout";
 import Link from "next/link";
+import { Plus } from "lucide-react";
 
 export default function DashboardPage() {
   return (
@@ -11,7 +12,7 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold">Dashboard</h1>
 
           <p className="mt-2 text-gray-600">
-            Review your code using AI and improve code quality.
+            Analyze your code, detect issues, and improve quality with AI.
           </p>
         </div>
 
@@ -26,6 +27,7 @@ export default function DashboardPage() {
             href="/review"
             className="inline-flex items-center rounded-md bg-blue-600 px-3 py-4  text-sm font-medium text-white transition-colors hover:bg-blue-700"
           >
+            <Plus className="mr-2 h-4 w-4" />
             Start New Review
           </Link>
         </div>
