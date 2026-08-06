@@ -9,13 +9,17 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="h-screen overflow-hidden bg-slate-950 text-slate-100">
+      {/* Fixed Navbar */}
       <Navbar />
 
-      <div className="flex">
+      {/* Sidebar + Content */}
+      <div className="flex h-[calc(100vh-64px)]">
+        {/* Fixed Sidebar */}
         <Sidebar />
 
-        <main className="flex-1 p-6 overflow-auto">{children}</main>
+        {/* Scrollable Content */}
+        <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
     </div>
   );

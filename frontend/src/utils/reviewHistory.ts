@@ -1,49 +1,48 @@
+const STORAGE_KEY = "review-history";
+
 export interface ReviewHistoryEntry {
   id: string;
-  timestamp: string;
   filename: string;
   language: string;
-  lines: number;
+  code: string;
   review: string;
+  lines: number;
+  timestamp: string;
 }
-
-const STORAGE_KEY = "ai-code-review-history";
-const MAX_ENTRIES = 50;
 
 export function getReviewHistory(): ReviewHistoryEntry[] {
-  if (typeof window === "undefined") {
-    return [];
-  }
+  if (typeof window === "undefined") return [];
 
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      return [];
-    }
+  const data = localStorage.getItem(STORAGE_KEY);
 
-    return JSON.parse(raw) as ReviewHistoryEntry[];
-  } catch {
-    return [];
-  }
+  return data ? JSON.parse(data) : [];
 }
 
-export function saveReviewHistory(entries: ReviewHistoryEntry[]) {
-  if (typeof window === "undefined") {
-    return;
-  }
+export function saveReviewHistory(entry: ReviewHistoryEntry) {
+  const history = getReviewHistory();
 
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-}
+  history.unshift(entry);
 
-export function addReviewHistory(
-  entry: ReviewHistoryEntry,
-): ReviewHistoryEntry[] {
-  const current = getReviewHistory();
-  const next = [entry, ...current].slice(0, MAX_ENTRIES);
-  saveReviewHistory(next);
-  return next;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
 }
 
 export function clearReviewHistory() {
-  saveReviewHistory([]);
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+/**
+ * Get a single review by id
+ */
+export function getReviewById(id: string): ReviewHistoryEntry | undefined {
+  const history = getReviewHistory();
+
+  return history.find((entry) => entry.id === id);
+}
+
+export function deleteReviewById(id: string) {
+  const history = getReviewHistory();
+
+  const updatedHistory = history.filter((entry) => entry.id !== id);
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedHistory));
 }

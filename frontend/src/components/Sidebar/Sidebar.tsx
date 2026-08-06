@@ -22,7 +22,7 @@ export default function Sidebar() {
   }, []);
 
   return (
-    <div className="flex h-full flex-col p-1 w-52  shrink-0 border-r border-slate-800 bg-slate-900 shadow-sm shadow-slate-200/40 md:block">
+    <aside className="flex h-full w-60 shrink-0 flex-col border-r border-slate-800 bg-slate-900 px-4 py-6">
       <div className="mb-8 mx-5">
         <h2 className="text-3xl font-bold text-white">Workspace</h2>
       </div>
@@ -71,6 +71,6 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }
