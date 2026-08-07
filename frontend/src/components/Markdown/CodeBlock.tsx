@@ -15,9 +15,7 @@ export default function CodeBlock({ language, code }: CodeBlockProps) {
 
   const copyCode = async () => {
     await navigator.clipboard.writeText(code);
-
     setCopied(true);
-
     setTimeout(() => {
       setCopied(false);
     }, 2000);

@@ -9,10 +9,12 @@ import { reviewCode } from "@/src/services/review.services";
 import EditorPanel from "@/src/components/Review/EditorialPanel";
 import { useSearchParams } from "next/navigation";
 import { getReviewById, saveReviewHistory } from "@/src/utils/reviewHistory";
+import { detectLanguage } from "@/src/utils/languageDetector";
 
 export default function ReviewPage() {
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState("");
+  const [filename, setFilename] = useState("No file selected");
 
   const [review, setReview] = useState("");
   const [loading, setLoading] = useState(false);
@@ -68,6 +70,18 @@ export default function ReviewPage() {
     }
   };
 
+  const handleFileUpload = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result;
+      if (typeof content !== "string") return;
+      setFilename(file.name);
+      setLanguage(detectLanguage(file.name));
+      setCode(content);
+    };
+
+    reader.readAsText(file);
+  };
   return (
     <AppLayout>
       <div className="mx-auto max-w-7xl space-y-8">
@@ -79,9 +93,12 @@ export default function ReviewPage() {
               language={language}
               code={code}
               loading={loading}
+              filename={filename}
               onLanguageChange={setLanguage}
               onCodeChange={setCode}
               onReview={handleReviewClick}
+              onFilenameChange={setFilename}
+              onFileSelect={handleFileUpload}
             />
           </div>
 
