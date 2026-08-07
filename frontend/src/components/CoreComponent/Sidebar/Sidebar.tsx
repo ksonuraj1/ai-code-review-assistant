@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { getUserSession } from "@/src/utils/auth";
@@ -8,7 +9,14 @@ import { SIDEBAR_ITEMS } from "@/src/constants/sidebar";
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const username = getUserSession()?.username ?? "Guest";
+  const [username, setUsername] = useState("Guest");
+
+  useEffect(() => {
+    const sessionUser = getUserSession()?.username;
+    if (sessionUser) {
+      setUsername(sessionUser);
+    }
+  }, []);
 
   return (
     <aside className="flex h-full w-60 shrink-0 flex-col border-r border-slate-800 bg-slate-900 px-4 py-6">
@@ -47,7 +55,6 @@ export default function Sidebar() {
 
           <div>
             <p className="font-medium text-white">{username}</p>
-
             <p className="text-sm text-slate-400">Frontend Engineer</p>
           </div>
         </div>

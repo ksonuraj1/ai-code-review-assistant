@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import ReviewHeader from "@/src/modules/Review/components/Review/ReviewHeader";
 import ReviewPanel from "@/src/modules/Review/components/Review/ReviewPanel";
@@ -12,7 +12,7 @@ import { getReviewById, saveReviewHistory } from "@/src/utils/reviewHistory";
 import { detectLanguage } from "@/src/utils/languageDetector";
 import { incrementReviewStats } from "@/src/utils/reviewStats";
 
-export default function ReviewPage() {
+function ReviewPageContent() {
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState("");
   const [filename, setFilename] = useState("No file selected");
@@ -107,5 +107,15 @@ export default function ReviewPage() {
         </div>
       </div>
     </AppLayout>
+  );
+}
+
+export default function ReviewPage() {
+  return (
+    <Suspense
+      fallback={<div className="p-6 text-slate-400">Loading review...</div>}
+    >
+      <ReviewPageContent />
+    </Suspense>
   );
 }

@@ -3,13 +3,13 @@ import CodeEditor from "../Editor/CodeEditor";
 import Button from "../../../../components/Button/Button";
 import { Loader2 } from "lucide-react";
 import FileUploadButton from "../Upload/FileUploadButton";
-import { detectLanguage } from "@/src/utils/languageDetector";
+import Dropdown from "@/src/components/CoreComponent/Dropdown";
+import { languageOptions } from "../../constants/constants.review";
 
 interface EditorPanelProps {
   language: string;
   code: string;
   loading: boolean;
-
   onLanguageChange: (language: string) => void;
   onCodeChange: (value: string) => void;
   onReview: () => void;
@@ -29,6 +29,10 @@ function EditorPanel({
   onFilenameChange,
   onFileSelect,
 }: EditorPanelProps) {
+  const characterCount = new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 0,
+  }).format(code.length);
+
   return (
     <Card className="flex h-full w-full flex-col overflow-hidden p-0">
       {/* Header */}
@@ -41,33 +45,30 @@ function EditorPanel({
           onFileSelect={onFileSelect}
           onFilenameChange={onFilenameChange}
         />
-        <select
+        <Dropdown
+          options={languageOptions}
           value={language}
-          onChange={(e) => onLanguageChange(e.target.value)}
-          className="rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white outline-none"
-        >
-          <option value="javascript">JavaScript</option>
-          <option value="typescript">TypeScript</option>
-          <option value="python">Python</option>
-          <option value="java">Java</option>
-        </select>
+          onChange={(event) => onLanguageChange(event.target.value)}
+          className="w-45 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none"
+          aria-label="Select programming language"
+        />
       </div>
 
       {/* Editor */}
-      <div className="flex-1 min-h-[400px] overflow-hidden">
+      <div className="flex-1 min-h-100 overflow-hidden">
         <CodeEditor code={code} language={language} onChange={onCodeChange} />
       </div>
 
       {/* Footer */}
       <div className="flex items-center justify-between border-t border-slate-700 px-6 py-4">
         <span className="text-sm text-slate-400">
-          {code.length.toLocaleString()} characters
+          {characterCount} characters
         </span>
 
         <Button
           onClick={onReview}
           disabled={loading || code.trim() === ""}
-          className="min-w-[160px]"
+          className="min-w-40"
         >
           {loading ? (
             <>

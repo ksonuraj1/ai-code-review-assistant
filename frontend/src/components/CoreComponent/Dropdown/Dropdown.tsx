@@ -10,7 +10,7 @@ export default function Dropdown({
   ...props
 }: DropdownProps) {
   return (
-    <div className="w-full">
+    <div className="">
       {label && (
         <label
           htmlFor={id}
