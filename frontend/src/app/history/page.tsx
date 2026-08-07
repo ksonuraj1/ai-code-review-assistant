@@ -8,10 +8,10 @@ import {
   getReviewHistory,
   ReviewHistoryEntry,
 } from "@/src/utils/reviewHistory";
-import HistoryList from "@/src/components/History/HistoryList";
-import EmptyHistory from "@/src/components/History/EmptyHistory";
-import HistoryHeader from "@/src/components/History/HistoryHeader";
+import HistoryList from "@/src/modules/History/components/HistoryList";
+import HistoryHeader from "@/src/modules/History/components/HistoryHeader";
 import { useRouter } from "next/navigation";
+import EmptyHistory from "@/src/modules/History/components/EmptyHistory";
 
 export default function HistoryPage() {
   const [history, setHistory] = useState<ReviewHistoryEntry[]>([]);

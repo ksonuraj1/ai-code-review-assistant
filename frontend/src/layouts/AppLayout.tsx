@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
-import Navbar from "@/src/components/Navbar/Navbar";
-import Sidebar from "@/src/components/Sidebar/Sidebar";
+import Navbar from "@/src/components/CoreComponent/Navbar/Navbar";
+import Sidebar from "@/src/components/CoreComponent/Sidebar/Sidebar";
 
 interface AppLayoutProps {
   children: ReactNode;

@@ -2,20 +2,20 @@
 
 import { useEffect, useState } from "react";
 
-import ReviewHeader from "@/src/components/Review/ReviewHeader";
-import ReviewPanel from "@/src/components/Review/ReviewPanel";
+import ReviewHeader from "@/src/modules/Review/components/Review/ReviewHeader";
+import ReviewPanel from "@/src/modules/Review/components/Review/ReviewPanel";
 import AppLayout from "@/src/layouts/AppLayout";
 import { reviewCode } from "@/src/services/review.services";
-import EditorPanel from "@/src/components/Review/EditorialPanel";
+import EditorPanel from "@/src/modules/Review/components/Review/EditorialPanel";
 import { useSearchParams } from "next/navigation";
 import { getReviewById, saveReviewHistory } from "@/src/utils/reviewHistory";
 import { detectLanguage } from "@/src/utils/languageDetector";
+import { incrementReviewStats } from "@/src/utils/reviewStats";
 
 export default function ReviewPage() {
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState("");
   const [filename, setFilename] = useState("No file selected");
-
   const [review, setReview] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -25,11 +25,8 @@ export default function ReviewPage() {
 
   useEffect(() => {
     if (!reviewId) return;
-
     const history = getReviewById(reviewId);
-
     if (!history) return;
-
     setLanguage(history.language);
     setCode(history.code);
     setReview(history.review);
@@ -52,9 +49,10 @@ export default function ReviewPage() {
       });
 
       setReview(data.review);
+      incrementReviewStats(filename ? 1 : 0, language);
       saveReviewHistory({
         id: crypto.randomUUID(),
-        filename: "Untitled",
+        filename: filename ? filename : "custom review",
         language,
         code,
         review: data.review,

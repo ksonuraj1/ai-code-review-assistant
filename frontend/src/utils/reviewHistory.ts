@@ -12,17 +12,13 @@ export interface ReviewHistoryEntry {
 
 export function getReviewHistory(): ReviewHistoryEntry[] {
   if (typeof window === "undefined") return [];
-
   const data = localStorage.getItem(STORAGE_KEY);
-
   return data ? JSON.parse(data) : [];
 }
 
 export function saveReviewHistory(entry: ReviewHistoryEntry) {
   const history = getReviewHistory();
-
   history.unshift(entry);
-
   localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
 }
 
