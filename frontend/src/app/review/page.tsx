@@ -11,12 +11,13 @@ import { useSearchParams } from "next/navigation";
 import { getReviewById, saveReviewHistory } from "@/src/utils/reviewHistory";
 import { detectLanguage } from "@/src/utils/languageDetector";
 import { incrementReviewStats } from "@/src/utils/reviewStats";
+import { ReviewAIResponse } from "@/src/modules/Review/types/review.types";
 
 function ReviewPageContent() {
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState("");
   const [filename, setFilename] = useState("No file selected");
-  const [review, setReview] = useState("");
+  const [review, setReview] = useState<ReviewAIResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const searchParams = useSearchParams();
@@ -29,7 +30,7 @@ function ReviewPageContent() {
     if (!history) return;
     setLanguage(history.language);
     setCode(history.code);
-    setReview(history.review);
+    setReview(null);
   }, [reviewId]);
 
   const handleReviewClick = async () => {
@@ -40,7 +41,7 @@ function ReviewPageContent() {
 
     setLoading(true);
     setError("");
-    setReview("");
+    setReview(null);
 
     try {
       const { data } = await reviewCode({
@@ -80,13 +81,17 @@ function ReviewPageContent() {
 
     reader.readAsText(file);
   };
+
+  const handleClearEditorCode = () => {
+    setCode("");
+  };
   return (
     <AppLayout>
       <div className="mx-auto max-w-7xl space-y-8">
         <ReviewHeader />
 
-        <div className="flex flex-col gap-2 xl:flex-row">
-          <div className="flex flex-1">
+        <div className="flex gap-1">
+          <div className="flex-1/2 min-w-0">
             <EditorPanel
               language={language}
               code={code}
@@ -97,11 +102,13 @@ function ReviewPageContent() {
               onReview={handleReviewClick}
               onFilenameChange={setFilename}
               onFileSelect={handleFileUpload}
+              onClear={handleClearEditorCode}
             />
           </div>
 
           {/* AI Review */}
-          <div className="flex w-full xl:max-w-[420px]">
+          <div className="flex-1/2 min-w-0">
+            {/* <pre>{JSON.stringify(review, null, 2)}</pre> */}
             <ReviewPanel review={review} loading={loading} error={error} />
           </div>
         </div>

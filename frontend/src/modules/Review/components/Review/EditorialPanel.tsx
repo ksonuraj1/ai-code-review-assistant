@@ -2,9 +2,8 @@ import Card from "../../../../components/Card/Card";
 import CodeEditor from "../Editor/CodeEditor";
 import Button from "../../../../components/Button/Button";
 import { Loader2 } from "lucide-react";
-import FileUploadButton from "../Upload/FileUploadButton";
-import Dropdown from "@/src/components/CoreComponent/Dropdown";
 import { languageOptions } from "../../constants/constants.review";
+import EditorToolbar from "../EditorToolbar/EditorToolbar";
 
 interface EditorPanelProps {
   language: string;
@@ -16,6 +15,7 @@ interface EditorPanelProps {
   filename: string;
   onFilenameChange: (name: string) => void;
   onFileSelect: (file: File) => void;
+  onClear: () => void;
 }
 
 function EditorPanel({
@@ -28,43 +28,32 @@ function EditorPanel({
   filename,
   onFilenameChange,
   onFileSelect,
+  onClear,
 }: EditorPanelProps) {
   const characterCount = new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 0,
   }).format(code.length);
-
+  const lineCount = code ? code.split("\n").length : 0;
   return (
     <Card className="flex h-full w-full flex-col overflow-hidden p-0">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-700 px-2 py-2">
-        <h2 className="text-xl font-semibold text-white">Source Code</h2>
-        {filename && (
-          <p className="mt-1 text-sm text-slate-400">📄 {filename}</p>
-        )}
-        <FileUploadButton
-          onFileSelect={onFileSelect}
-          onFilenameChange={onFilenameChange}
-        />
-        <Dropdown
-          options={languageOptions}
-          value={language}
-          onChange={(event) => onLanguageChange(event.target.value)}
-          className="w-45 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none"
-          aria-label="Select programming language"
-        />
-      </div>
-
-      {/* Editor */}
+      <EditorToolbar
+        language={language}
+        languageOptions={languageOptions}
+        onLanguageChange={onLanguageChange}
+        onFileSelect={onFileSelect}
+        onFilenameChange={onFilenameChange}
+        onClear={onClear}
+      />
       <div className="flex-1 min-h-100 overflow-hidden">
         <CodeEditor code={code} language={language} onChange={onCodeChange} />
       </div>
 
-      {/* Footer */}
       <div className="flex items-center justify-between border-t border-slate-700 px-6 py-4">
-        <span className="text-sm text-slate-400">
-          {characterCount} characters
-        </span>
-
+        <div className="flex items-center gap-4 text-sm text-slate-400">
+          <span>{language}</span>
+          <span>{lineCount} Lines</span>
+          <span>{characterCount.toLocaleString()} Characters</span>
+        </div>
         <Button
           onClick={onReview}
           disabled={loading || code.trim() === ""}

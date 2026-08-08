@@ -21,14 +21,11 @@ export default function MarkdownViewer({ content }: MarkdownViewerProps) {
         prose
         prose-invert
         max-w-none
-
         prose-headings:text-white
         prose-p:text-slate-300
         prose-strong:text-white
         prose-li:text-slate-300
-
         prose-code:text-sky-300
-
         prose-pre:bg-slate-950
         prose-pre:border
         prose-pre:border-slate-700
@@ -40,7 +37,6 @@ export default function MarkdownViewer({ content }: MarkdownViewerProps) {
         components={{
           code(props) {
             const { children, className } = props;
-
             const match = /language-(\w+)/.exec(className || "");
 
             if (!match) {

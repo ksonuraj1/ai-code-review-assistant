@@ -1,42 +1,27 @@
+import crypto from "crypto";
+
 import groq from "../providers/groq.provider";
 
-interface ReviewRequest {
-  language: string;
-  code: string;
-  filename?: string;
-}
+import {
+  ReviewAIResponse,
+  ReviewRequest,
+  ReviewResponse,
+} from "../types/review.types";
+import { promptToReview } from "../constants/weview.constants";
 
-interface ReviewResponse {
-  review: string;
-}
+const calculateReadingTime = (text: string): string => {
+  const words = text.trim().split(/\s+/).length;
+
+  const minutes = Math.max(1, Math.ceil(words / 200));
+
+  return `${minutes} min`;
+};
 
 export const reviewCodeService = async ({
   language,
   code,
 }: ReviewRequest): Promise<ReviewResponse> => {
-  const prompt = `
-You are a Senior Staff Software Engineer.
-Review the following ${language} and code${code}.
-
-Evaluate:
-
-- Correctness
-- Bugs
-- Performance
-- Readability
-- Maintainability
-- Security
-- Best Practices
-- Scalability
-
-Return your answer in Markdown.
-
-Code:
-
-\`\`\`${language}
-${code}
-\`\`\`
-`;
+  const prompt = promptToReview(language, code);
 
   const completion = await groq.chat.completions.create({
     model: "llama-3.3-70b-versatile",
@@ -54,7 +39,31 @@ ${code}
     temperature: 0.3,
   });
 
+  const response = completion.choices[0]?.message?.content;
+
+  if (!response) {
+    throw new Error("No review generated.");
+  }
+
+  let parsedReview: ReviewAIResponse;
+
+  try {
+    parsedReview = JSON.parse(response);
+  } catch (error) {
+    console.error("Failed to parse AI response:", response);
+    throw new Error("AI returned an invalid JSON response.");
+  }
+
   return {
-    review: completion.choices[0]?.message?.content ?? "No review generated.",
+    metadata: {
+      reviewId: crypto.randomUUID(),
+      language,
+      reviewedAt: new Date().toISOString(),
+      reviewVersion: "1.0.0",
+      estimatedReadingTime: calculateReadingTime(parsedReview.detailedReport),
+      model: "llama-3.3-70b-versatile",
+    },
+
+    review: parsedReview,
   };
 };

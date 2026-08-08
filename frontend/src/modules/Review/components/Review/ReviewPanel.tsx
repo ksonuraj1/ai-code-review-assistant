@@ -2,12 +2,22 @@ import Card from "@/src/components/Card/Card";
 import ReviewSkeleton from "@/src/modules/Review/components/Loading/ReviewSkeleton";
 import MarkdownViewer from "@/src/modules/Review/components/Markdown/MarkdownViewer";
 import { Bot, Copy, Download } from "lucide-react";
-import Button from "../../../../components/Button/Button";
 import { downloadMarkdown, downloadReviewPDF } from "@/src/utils/download";
 import { useRef, useState } from "react";
+import Button from "@/src/components/CoreComponent/Button";
+import { ReviewAIResponse } from "../../types/review.types";
+import ReviewSummary from "../ReviewSummary";
+import ReviewMetrics from "../ReviewMetrics";
+import FindingSection from "../ReviewFindings/FindingSection";
+import ReviewFindings from "../ReviewFindings/ReviewFindings";
+import ReviewGoodPractices from "../ReviewGoodPractices";
+import ReviewImprovements from "../ReviewImprovements";
+import ReviewUpdatedCode from "../ReviewUpdatedCode/ReviewUpdatedCode";
+import NextSteps from "../NextSteps";
+import Assistant from "../ReviewAssistant/Assistant";
 
 interface ReviewPanelProps {
-  review: string;
+  review: ReviewAIResponse | null;
   loading: boolean;
   error: string;
 }
@@ -21,7 +31,7 @@ export default function ReviewPanel({
   const reviewRef = useRef<HTMLDivElement | null>(null);
 
   const copyReviewByAi = async () => {
-    await window.navigator.clipboard.writeText(review);
+    await window.navigator.clipboard.writeText("review");
     setCopyReviw(true);
     setTimeout(() => {
       setCopyReviw(false);
@@ -43,22 +53,12 @@ export default function ReviewPanel({
 
           {!!review && !loading && (
             <div className="flex flex-wrap gap-2">
-              <button
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                className="w-auto"
                 onClick={copyReviewByAi}
-                className="
-              flex
-              items-center
-              gap-2
-              rounded-lg
-              border
-              border-slate-700
-              px-4
-              py-2
-              text-sm
-              text-slate-300
-              transition
-              hover:bg-slate-800
-            "
               >
                 {copyReview ? (
                   <>
@@ -71,29 +71,26 @@ export default function ReviewPanel({
                     Copy
                   </>
                 )}
-              </button>
-              <button
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                className="w-auto"
                 onClick={() => {
-                  downloadMarkdown(review, "review");
+                  downloadMarkdown("review", "review");
                 }}
-                className="flex items-center gap-2 rounded-lg
-              border
-              border-slate-700
-              px-1
-              py-1
-              text-sm
-              text-slate-300
-              transition
-              hover:bg-slate-800
-            "
               >
                 <Download size={16} />
                 Download
-              </button>
-              <button
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                className="w-auto"
                 onClick={() => {
                   if (!reviewRef.current) return;
-
                   downloadReviewPDF({
                     filename: "ai-review",
                     language: "JavaScript", // Replace with actual language if available
@@ -101,33 +98,17 @@ export default function ReviewPanel({
                     review: reviewRef.current.innerText,
                   });
                 }}
-                className="
-      flex
-      items-center
-      gap-2
-      rounded-lg
-      border
-      border-slate-700
-      px-4
-      py-2
-      text-sm
-      text-slate-300
-      transition
-      hover:bg-slate-800
-      cursor-pointer
-  "
               >
                 <Download size={16} />
                 PDF
-              </button>
+              </Button>
             </div>
           )}
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto">
           {loading && <ReviewSkeleton />}
-
           {!loading && error && (
             <div className="rounded-lg border border-red-500/40 bg-red-500/10 p-4 text-red-300">
               {error}
@@ -136,14 +117,34 @@ export default function ReviewPanel({
 
           <div>
             {!loading && !error && review && (
-              <MarkdownViewer content={review} />
+              // <MarkdownViewer content={review} />
+              <>
+                <ReviewSummary
+                  overallScore={review.summary.overallScore}
+                  overallComment={review.summary.overallComment}
+                  riskLevel={review.summary.riskLevel}
+                />
+                <ReviewMetrics metrics={review.metrics} />
+                <ReviewFindings findings={review.findings} />
+                <ReviewGoodPractices goodPractices={review.goodPractices} />
+                <ReviewImprovements improvements={review.improvements} />
+                <ReviewUpdatedCode
+                  language="javascript"
+                  updatedCode={review.updatedCode}
+                />
+                <NextSteps steps={review.nextSteps} />
+                <Assistant
+                  language={"language"}
+                  code={"originalCode"}
+                  review={JSON.stringify(review)}
+                />
+              </>
             )}
           </div>
 
           {!loading && !error && !review && (
             <div className="flex h-full flex-col items-center justify-center text-center text-slate-500">
               <Bot size={48} className="mb-4 text-slate-600" />
-
               <h3 className="text-lg font-medium text-slate-300">
                 No Review Yet
               </h3>

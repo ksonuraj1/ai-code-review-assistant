@@ -9,7 +9,7 @@ const variantStyles = {
 };
 
 const sizeStyles = {
-  sm: "px-3 py-2 text-sm",
+  sm: "w-3xs px-3 py-2 text-sm",
   md: "px-4 py-2 text-sm",
   lg: "px-6 py-3 text-base",
 };
@@ -31,7 +31,7 @@ export default function Button({
     <button
       type={type}
       disabled={disabled || loading}
-      className={`w-full inline-flex items-center justify-center gap-2 rounded-2xl cursor-pointer
+      className={`inline-flex items-center justify-center gap-2 rounded-2xl cursor-pointer
         ${variantStyles[variant]}
         ${sizeStyles[size]}
         ${fullWidth ? "w-full" : ""}
